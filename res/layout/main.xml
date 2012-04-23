@@ -4,9 +4,35 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-    <TextView
+    <ImageView
+        android:id="@+id/funcagebanner"
+        android:layout_width="fill_parent"
+        android:layout_height="40dp"
+        android:scaleType="fitXY"
+        android:src="@drawable/banner" />
+    
+    <WebView
+        android:id="@+id/randomPicWebView"
+        android:layout_width="fill_parent"
+        android:layout_height="320dp"
+        android:layout_marginTop = "2dp"/>
+
+    <Button
+        android:id="@+id/shareButton"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="@string/hello" />
+        android:text="Share Random Photo" />
+
+    <Button
+        android:id="@+id/getRandomButton"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Get Random Photo" />
+    
+    <ImageView
+        android:id="@+id/adbanner"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_launcher" />
 
 </LinearLayout>
