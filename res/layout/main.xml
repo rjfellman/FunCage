@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    			xmlns:ads="http://schemas.android.com/apk/lib/com.google.ads"
+    			
+    android:id="@+id/RelativeLayout1"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical" >
@@ -8,32 +11,47 @@
         android:id="@+id/funcagebanner"
         android:layout_width="fill_parent"
         android:layout_height="40dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="2dp"
         android:scaleType="fitXY"
         android:src="@drawable/banner" />
-    
+
     <WebView
         android:id="@+id/randomPicWebView"
-        android:isScrollContainer="false"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_marginTop = "2dp"/>
-
-    <Button
-        android:id="@+id/shareButton"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="Share Random Photo" />
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/funcagebanner"
+        android:layout_marginTop="2dp"
+        android:layout_marginBottom="135dp"
+        android:isScrollContainer="false" />
 
     <Button
         android:id="@+id/getRandomButton"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
+        android:layout_above="@+id/adView"
+        android:layout_alignParentLeft="true"
         android:text="Get Random Photo" />
-    
-    <ImageView
-        android:id="@+id/adbanner"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:src="@drawable/ic_launcher" />
 
-</LinearLayout>
+    <Button
+        android:id="@+id/shareButton"
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:layout_above="@+id/getRandomButton"
+        android:layout_alignParentLeft="true"
+        android:text="Share Random Photo" />
+    
+    <com.google.ads.AdView android:id="@+id/adView"
+                         android:layout_width="fill_parent"
+                         android:layout_height="wrap_content"
+                         android:layout_alignParentBottom="true"
+        				 android:layout_alignParentLeft="true"
+                         ads:adUnitId="a14df6460244af5"
+                         ads:adSize="BANNER"
+                         ads:testDevices="TEST_EMULATOR, TEST_DEVICE_ID"
+                         ads:loadAdOnCreate="true"/>
+    
+
+</RelativeLayout>
