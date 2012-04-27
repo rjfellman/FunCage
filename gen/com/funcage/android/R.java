@@ -47,11 +47,14 @@ containing a value of this type.
         public static final int adView=0x7f040008;
         public static final int funcagebanner=0x7f040005;
         public static final int getRandomButton=0x7f040007;
+        public static final int progressBar1=0x7f04000a;
         public static final int randomPicWebView=0x7f040006;
         public static final int shareButton=0x7f040009;
+        public static final int textView1=0x7f04000b;
     }
     public static final class layout {
-        public static final int main=0x7f030000;
+        public static final int black=0x7f030000;
+        public static final int main=0x7f030001;
     }
     public static final class string {
         public static final int app_name=0x7f050001;

@@ -1,5 +1,11 @@
 package com.funcage.android;
 
+import com.easy.facebook.*;
+import twitter4j.Status;
+import twitter4j.Twitter;
+import twitter4j.TwitterException;
+import twitter4j.TwitterFactory;
+import android.webkit.*;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
@@ -10,9 +16,9 @@ import android.view.View;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import android.widget.Button;
+import android.widget.ProgressBar;
 
 import com.google.ads.*;
-
 
 //To-do list
 //Landscape Orientation buttons arent showing
@@ -31,20 +37,36 @@ public class FunCageActivity extends Activity {
 	Button generateRandomPic;
 	Button shareRandomPic;
 	
+	ProgressBar progBar;
+	
 	/** Called when the activity is first created. */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
+		
+		//String url;
+		//if (URLUtil.isJavaScriptUrl(url)) {			
+		//	    // strip off the scheme and evaluate the string			
+		//	    stringByEvaluatingJavaScriptFromString(			
+		//	            url.substring("javascript:".length()));
+		//	} else {
+		
+		//progBar = (ProgressBar) findViewById(R.id.progressBar1);
+		//int progressSpun = 0;
+		//while(progressSpun != 102){
+		//	progBar++;
+		//	progBar.setProgress(progressSpun);
+		
 		randomPic = (WebView) findViewById(R.id.randomPicWebView);
 		randomPic.getSettings().setUseWideViewPort(true);
 		randomPic.getSettings().setLoadWithOverviewMode(true);
 		
 		/* JavaScript must be enabled if you want it to work, obviously */  
 		randomPic.getSettings().setJavaScriptEnabled(true);  
-		  
-		  
-
+		FuncageJavaScriptInterface javaInterface = new FuncageJavaScriptInterface();
+		randomPic.addJavascriptInterface(javaInterface, "HTMLOUT");
+		
 		
 		AdView adview = (AdView)findViewById(R.id.adView);
 		AdRequest re = new AdRequest();
@@ -79,6 +101,7 @@ public class FunCageActivity extends Activity {
 	            new DialogInterface.OnClickListener() {
 	                public void onClick(DialogInterface dialog, int id) {
 	                	Log.d(getClass().getName(),"Facebooking...");
+	                	//shareOnFacebook();
 	                }
 	            });
 
@@ -86,6 +109,7 @@ public class FunCageActivity extends Activity {
 	            new DialogInterface.OnClickListener() {
 	                public void onClick(DialogInterface dialog, int id) {
 	                	Log.d(getClass().getName(),"Tweeting...");
+	                	//shareOnTwitter();
 
 	                }
 	            });
@@ -105,8 +129,9 @@ public class FunCageActivity extends Activity {
 		randomPic.setWebViewClient(new WebViewClient() {  
 		    public void onPageFinished(WebView view, String url)  
 		    {  
-		    	randomPic.loadUrl("javascript:(function() { " +
-		                "document.getElementById(\"image\").getAttribute(\"src\")");
+		    	randomPic.loadUrl("javascript:( function () { var resultSrc = document.getElementById(\"image\").getAttribute(\"src\"); window.HTMLOUT.appimageCallback(resultSrc); } ) ()");
+		    	/*randomPic.loadUrl("javascript:(function() { " +
+		                "document.getElementById(\"image\").getAttribute(\"src\")");*/
 		    	
 		    }  
 		});
@@ -124,10 +149,21 @@ public class FunCageActivity extends Activity {
     
     public void shareOnFacebook() {
     	//share on facebook
+    	Intent intent;
+    	intent = new Intent(this, FacebookConnect.class);
+        startActivity(intent);
+
     }
     
     public void shareOnTwitter() {
     	//share on twitter
+        Twitter twitter = new TwitterFactory().getInstance();
+        try {
+			Status status = twitter.updateStatus("TestUpdate");
+		} catch (TwitterException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
     }
     
     public void shareOnEmail() {
@@ -139,4 +175,6 @@ public class FunCageActivity extends Activity {
     	emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, "Check out this funny picture from FunCage: <br><br><a href=\"http://www.funcage.com/m/funnypicture.php?image="+imageURL+"</a>\n\nIf you liked the funny pic above, you will enjoy the FunCage app on your Android");
     	startActivity(Intent.createChooser(emailIntent, "Email:"));
     }
+    
+    
 }
