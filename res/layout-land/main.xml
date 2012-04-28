@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    			xmlns:ads="http://schemas.android.com/apk/lib/com.google.ads"
-    			
+    xmlns:ads="http://schemas.android.com/apk/lib/com.google.ads"
     android:id="@+id/RelativeLayout1"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
@@ -21,63 +20,64 @@
         android:id="@+id/randomPicWebView"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
+        android:layout_above="@+id/adView"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/funcagebanner"
+        android:layout_marginRight="126dp"
         android:layout_marginTop="2dp"
-        android:layout_marginBottom="150dp"
         android:isScrollContainer="false" />
+
+    <com.google.ads.AdView
+        android:id="@+id/adView"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        ads:adSize="BANNER"
+        ads:adUnitId="a14df6460244af5"
+        ads:loadAdOnCreate="true"
+        ads:testDevices="TEST_EMULATOR, TEST_DEVICE_ID" />
 
     <Button
         android:id="@+id/getRandomButton"
-        android:layout_width="fill_parent"
+        android:layout_width="125dp"
         android:layout_height="50dp"
-        android:layout_above="@+id/adView"
-        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/shareButton"
         android:text="Get Random Photo" />
 
     <Button
         android:id="@+id/shareButton"
-        android:layout_width="fill_parent"
+        android:layout_width="125dp"
         android:layout_height="50dp"
-        android:layout_above="@+id/getRandomButton"
-        android:layout_alignParentLeft="true"
-        android:text="Share Random Photo" />
-    
-    <com.google.ads.AdView android:id="@+id/adView"
-                         android:layout_width="fill_parent"
-                         android:layout_height="wrap_content"
-                         android:layout_alignParentBottom="true"
-        				 android:layout_alignParentLeft="true"
-                         ads:adUnitId="a14df6460244af5"
-                         ads:adSize="BANNER"
-                         ads:testDevices="TEST_EMULATOR, TEST_DEVICE_ID"
-                         ads:loadAdOnCreate="true"/>
+        android:layout_alignParentRight="true"
+        android:text="Share Random Photo"
+        android:layout_below="@+id/funcagebanner" />
 
     <ProgressBar
         android:id="@+id/progressBar1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/randomPicWebView"
-        android:layout_centerVertical="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="126dp" />
+        android:layout_centerVertical="true" />
 
     <TextView
         android:id="@+id/loadingText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/progressBar1"
-        android:layout_centerVertical="true"
+        android:layout_below="@+id/progressBar1"
         android:text="Loading..." />
 
     <TextView
         android:id="@+id/textView1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/shareButton"
-        android:layout_centerHorizontal="true"
+        android:layout_alignLeft="@+id/getRandomButton"
+        android:layout_below="@+id/getRandomButton"
         android:text="Shake for random picture!"
         android:textAppearance="?android:attr/textAppearanceMedium"
-        android:layout_marginTop="10dp" />
+        android:gravity="center_horizontal"
+        android:textColor="#FFFFFF" />
 
 </RelativeLayout>

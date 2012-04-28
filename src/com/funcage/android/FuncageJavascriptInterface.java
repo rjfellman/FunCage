@@ -2,14 +2,16 @@ package com.funcage.android;
 
 import android.util.Log;
 
-class FuncageJavaScriptInterface {
-    public String appimageCallback(String jsResult) {
-		
-    	String imageLocation;
-    	
+public class FuncageJavaScriptInterface {
+	
+	String imageLocation;
+	
+    public void appimageCallback(String jsResult) {
     	imageLocation = jsResult;
-    	Log.d(getClass().getName(),imageLocation);
-    	
-    	return jsResult;
+    	System.out.println(imageLocation+"origval");
+    }
+    
+    public String getAppImage(){
+    	return imageLocation;
     }
 }
