@@ -3,12 +3,16 @@ package com.funcage.android;
 import java.util.Date;
 
 import oauth.signpost.OAuth;
+import oauth.signpost.OAuthProvider;
+import oauth.signpost.basic.DefaultOAuthProvider;
+import oauth.signpost.commonshttp.CommonsHttpOAuthConsumer;
 
 import com.android.hardware.*;
 import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
+import twitter4j.auth.AccessToken;
 import android.webkit.*;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -21,6 +25,7 @@ import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
@@ -60,6 +65,17 @@ public class FunCageActivity extends Activity implements DialogListener{
 	private SharedPreferences prefs;
 	private final Handler mTwitterHandler = new Handler();
 	private TextView loginStatus;
+	
+	//Twitter
+	private static final String APP = 	"FunCage";
+
+	private Twitter twitter;
+	private OAuthProvider provider;
+	private CommonsHttpOAuthConsumer consumer;
+
+	private String CONSUMER_KEY = 		"cnSk1UkMf4FbsWNqWhopQ";
+	private String CONSUMER_SECRET = 	"GCch7JWFEEbr5W4bqQfYL7vDGeqeZwDhVwyGw0zSec";
+	private String CALLBACK_URL = 		"funcage-android://twitter-callback";
 
 	/** Called when the activity is first created. */
 	@Override
@@ -210,13 +226,9 @@ public class FunCageActivity extends Activity implements DialogListener{
 	public void shareOnTwitter() {
 		//share on twitter
 		getImageLocation();
-		if (TwitterUtils.isAuthenticated(prefs)) {
-			sendTweet();
-		} else {
-			Intent i = new Intent(getApplicationContext(), PrepareRequestTokenActivity.class);
-			i.putExtra("tweet_msg",getTweetMsg());
-			startActivity(i);
-		}
+		askOAuth();
+		OAuth a = new OAuth();
+		
 	}
 
 	public void shareOnEmail() {
@@ -227,32 +239,6 @@ public class FunCageActivity extends Activity implements DialogListener{
 		emailIntent.putExtra(android.content.Intent.EXTRA_SUBJECT, "Check out this funny picture from FunCage");
 		emailIntent.putExtra(android.content.Intent.EXTRA_TEXT, "Check out this funny picture from FunCage: \n\nhttp://www.funcage.com/m/funnypicture.php?image="+appImage+"\n\nIf you liked the funny pic above, you will enjoy the FunCage app on your Android");
 		startActivity(Intent.createChooser(emailIntent, "Email:"));
-	}
-	
-	final Runnable mUpdateTwitterNotification = new Runnable() {
-	       public void run() {
-	       	Toast.makeText(getBaseContext(), "Tweet sent !", Toast.LENGTH_LONG).show();
-	       }
-	   };
-	   
-	   private String getTweetMsg() {
-		   return "Tweeting from Android App";
-		   } 
-
-	public void sendTweet() {
-		Thread t = new Thread() {
-			public void run() {
-
-				try {
-					TwitterUtils.sendTweet(prefs,"Hello");
-					mTwitterHandler.post(mUpdateTwitterNotification);
-				} catch (Exception ex) {
-					ex.printStackTrace();
-				}
-			}
-
-		};
-		t.start();
 	}
 	
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -305,5 +291,72 @@ public class FunCageActivity extends Activity implements DialogListener{
 	public void onCancel() {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	/**
+	 * Open the browser and asks the user to authorize the app.
+	 * Afterwards, we redirect the user back here!
+	 */
+	private void askOAuth() {
+		try {
+			consumer = new CommonsHttpOAuthConsumer(CONSUMER_KEY, CONSUMER_SECRET);
+			provider = new DefaultOAuthProvider("http://twitter.com/oauth/request_token",
+												"http://twitter.com/oauth/access_token",
+												"http://twitter.com/oauth/authorize");//
+			String authUrl = provider.retrieveRequestToken(consumer, CALLBACK_URL);
+			Toast.makeText(this, "Please authorize this app!", Toast.LENGTH_LONG).show();
+			//this.startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(authUrl)));
+			Intent intent = new Intent(Intent.ACTION_VIEW,
+					Uri.parse(authUrl)); 
+				//intent.addFlags(Intent.FLAG_ACTIVITY_SINGLE_TASK);
+				this.startActivity(intent); 
+		} catch (Exception e) {
+			Log.e(APP, e.getMessage());
+			Toast.makeText(this, e.getMessage(), Toast.LENGTH_LONG).show();
+		}
+	}
+	
+	/**
+	 * As soon as the user successfully authorized the app, we are notified
+	 * here. Now we need to get the verifier from the callback URL, retrieve
+	 * token and token_secret and feed them to twitter4j (as well as
+	 * consumer key and secret).
+	 */
+	@Override
+	protected void onNewIntent(Intent intent) {
+		Log.i("got","GOT HERE");
+
+		super.onNewIntent(intent);
+
+		Uri uri = intent.getData();
+		if (uri != null && uri.toString().startsWith(CALLBACK_URL)) {
+
+			String verifier = uri.getQueryParameter(oauth.signpost.OAuth.OAUTH_VERIFIER);
+
+			try {
+				// this will populate token and token_secret in consumer
+				provider.retrieveAccessToken(consumer, verifier);
+				
+				// TODO: you might want to store token and token_secret in you app settings!!!!!!!!
+				AccessToken a = new AccessToken(consumer.getToken(), consumer.getTokenSecret());
+				
+				// initialize Twitter4J//
+				twitter = new TwitterFactory().getInstance();
+				twitter.setOAuthConsumer(CONSUMER_KEY, CONSUMER_SECRET);
+				twitter.setOAuthAccessToken(a);
+				
+				// create a tweet
+				String tweet = "Check out this picture from FunCage";
+				Toast.makeText(this, "Posting!" + tweet, Toast.LENGTH_LONG).show();
+
+				// send the tweet
+				twitter.updateStatus(tweet);
+				Toast.makeText(this, "Should have posted message...!" + tweet, Toast.LENGTH_LONG).show();
+				
+			} catch (Exception e) {
+				Log.e(APP, e.getMessage());
+			}
+
+		}
 	}
 }
