@@ -6,6 +6,10 @@ import oauth.signpost.OAuth;
 import oauth.signpost.OAuthProvider;
 import oauth.signpost.basic.DefaultOAuthProvider;
 import oauth.signpost.commonshttp.CommonsHttpOAuthConsumer;
+import oauth.signpost.exception.OAuthCommunicationException;
+import oauth.signpost.exception.OAuthExpectationFailedException;
+import oauth.signpost.exception.OAuthMessageSignerException;
+import oauth.signpost.exception.OAuthNotAuthorizedException;
 
 import com.android.hardware.*;
 import twitter4j.Status;
@@ -67,14 +71,14 @@ public class FunCageActivity extends Activity implements DialogListener{
 	private TextView loginStatus;
 	
 	//Twitter
-	private static final String APP = 	"FunCage";
+	private static final String APP = 	"FunCage";//
 
 	private Twitter twitter;
 	private OAuthProvider provider;
 	private CommonsHttpOAuthConsumer consumer;
 
-	private String CONSUMER_KEY = 		"cnSk1UkMf4FbsWNqWhopQ";
-	private String CONSUMER_SECRET = 	"GCch7JWFEEbr5W4bqQfYL7vDGeqeZwDhVwyGw0zSec";
+	private String CONSUMER_KEY = 		"RysEZCje1inzDQUGfTp8Ww";//
+	private String CONSUMER_SECRET = 	"Th5NF42U1D3YYhiozzeVh0dEIOOKltrkBx65N2E";
 	private String CALLBACK_URL = 		"funcage-android://twitter-callback";
 
 	/** Called when the activity is first created. */
@@ -332,11 +336,34 @@ public class FunCageActivity extends Activity implements DialogListener{
 		if (uri != null && uri.toString().startsWith(CALLBACK_URL)) {
 
 			String verifier = uri.getQueryParameter(oauth.signpost.OAuth.OAUTH_VERIFIER);
+			Log.i("OAuth",verifier);
 
-			try {
+			
 				// this will populate token and token_secret in consumer
-				provider.retrieveAccessToken(consumer, verifier);
+				try {
+					provider.retrieveAccessToken(consumer, verifier);
+				} catch (OAuthMessageSignerException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+					Log.i("OAuth","SignerException");
+				} catch (OAuthNotAuthorizedException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+					Log.i("OAuth","NotAuthorizedEx");
+				} catch (OAuthExpectationFailedException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+					Log.i("OAuth","FailedException");
+				} catch (OAuthCommunicationException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+					Log.i("OAuth","CommunicationException");
+				} finally {
+					Log.i("OAuth","Was OK!");
+				}
 				
+				Log.i("OAuth","Token: "+consumer.getToken());
+				Log.i("OAuth","Secret Token: "+consumer.getTokenSecret());
 				// TODO: you might want to store token and token_secret in you app settings!!!!!!!!
 				AccessToken a = new AccessToken(consumer.getToken(), consumer.getTokenSecret());
 				
@@ -349,13 +376,18 @@ public class FunCageActivity extends Activity implements DialogListener{
 				String tweet = "Check out this picture from FunCage";
 				Toast.makeText(this, "Posting!" + tweet, Toast.LENGTH_LONG).show();
 
-				// send the tweet
-				twitter.updateStatus(tweet);
+				// send the tweet//
+				try {
+					twitter.updateStatus(tweet);
+				} catch (TwitterException e) {
+					// TODO Auto-generated catch block
+					Log.i("OAuth","Twitter Broke");
+					Log.e(APP, e.getMessage());
+					e.printStackTrace();	
+				}
 				Toast.makeText(this, "Should have posted message...!" + tweet, Toast.LENGTH_LONG).show();
 				
-			} catch (Exception e) {
-				Log.e(APP, e.getMessage());
-			}
+			
 
 		}
 	}
