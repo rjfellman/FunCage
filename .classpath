@@ -9,6 +9,8 @@
 	<classpathentry kind="lib" path="lib/twitter4j-core-android-2.2.5.jar"/>
 	<classpathentry kind="lib" path="lib/twitter4j-media-support-android-2.2.5.jar"/>
 	<classpathentry kind="lib" path="lib/twitter4j-stream-android-2.2.5.jar"/>
-	<classpathentry kind="lib" path="/Users/russellfellman/Desktop/easyfacebookandroidsdk_2.3.jar"/>
+	<classpathentry kind="lib" path="/Users/russellfellman/Desktop/jtwitter-2.5/jtwitter.jar"/>
+	<classpathentry kind="lib" path="/Users/russellfellman/Desktop/signpost-core-1.2.1.1.jar"/>
+	<classpathentry kind="lib" path="/Users/russellfellman/Desktop/signpost-commonshttp4-1.2.1.1.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>
