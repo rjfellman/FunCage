@@ -11,6 +11,7 @@ import oauth.signpost.exception.OAuthExpectationFailedException;
 import oauth.signpost.exception.OAuthMessageSignerException;
 import oauth.signpost.exception.OAuthNotAuthorizedException;
 
+import android.content.SharedPreferences;
 import com.android.hardware.*;
 import twitter4j.Status;
 import twitter4j.Twitter;
@@ -49,7 +50,7 @@ import com.facebook.android.Facebook.DialogListener;
 import com.facebook.android.PostDialogListener;
 import com.google.ads.*;
 
-public class FunCageActivity extends Activity implements DialogListener{
+public class FunCageActivity extends Activity{
 	//Facebook//
 	//FUNCAGE APP ID = 473922950706	
 	//Test App ID = 293669467362284
@@ -61,6 +62,11 @@ public class FunCageActivity extends Activity implements DialogListener{
 
 	ProgressBar progBar;
 	TextView loadText;
+	
+	//Preferences
+	String fblogin;
+	String twitterOAuthToken;
+	String twitterOAuthTokenSecret;
 
 	String appImage;
 	FuncageJavaScriptInterface javaInterface = new FuncageJavaScriptInterface();
@@ -87,9 +93,7 @@ public class FunCageActivity extends Activity implements DialogListener{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.main);
 		
-		
-
-		this.prefs = PreferenceManager.getDefaultSharedPreferences(this);
+		LoadPreferences();
 
 		progBar = (ProgressBar) findViewById(R.id.progressBar1);
 		loadText = (TextView) findViewById(R.id.loadingText);
@@ -98,6 +102,8 @@ public class FunCageActivity extends Activity implements DialogListener{
 		randomPic = (WebView) findViewById(R.id.randomPicWebView);
 		randomPic.getSettings().setUseWideViewPort(true);
 		randomPic.getSettings().setLoadWithOverviewMode(true);
+		randomPic.setScrollbarFadingEnabled(true);
+		randomPic.setScrollBarStyle(WebView.SCROLLBARS_INSIDE_OVERLAY);
 
 		/* JavaScript must be enabled if you want it to work, obviously */  
 		randomPic.getSettings().setJavaScriptEnabled(true);  
@@ -181,8 +187,8 @@ public class FunCageActivity extends Activity implements DialogListener{
 		progBar.setVisibility(ProgressBar.VISIBLE);
 		loadText.setVisibility(TextView.VISIBLE);
 		//String imageURL = randomPic.loadUrl("javascript:PerformSimpleCalculation(document.getElementById(\"image\").getAttribute(\"src\"))");
-		randomPic.setScrollBarStyle(WebView.SCROLLBARS_OUTSIDE_OVERLAY);
-		randomPic.setScrollbarFadingEnabled(false);
+		randomPic.setScrollBarStyle(WebView.SCROLLBARS_INSIDE_OVERLAY);
+		randomPic.setScrollbarFadingEnabled(true);
 		randomPic.setBackgroundColor(0x00000000);
 	}
 
@@ -219,10 +225,7 @@ public class FunCageActivity extends Activity implements DialogListener{
             public void onCancel() {
             }
         });
-
-
-				
-				postOnWall("FunCage Test");
+				postOnWall("FunCage");
 				
 				Toast.makeText(this, "Picture successfully posted to facebook!", Toast.LENGTH_LONG).show();
 	}
@@ -230,8 +233,13 @@ public class FunCageActivity extends Activity implements DialogListener{
 	public void shareOnTwitter() {
 		//share on twitter
 		getImageLocation();
-		askOAuth();
-		OAuth a = new OAuth();
+		LoadPreferences();
+		if(twitterOAuthToken.isEmpty() || twitterOAuthTokenSecret.isEmpty()){
+			askOAuth();
+		}
+		else{
+			postTweet();
+		}
 		
 	}
 
@@ -252,7 +260,6 @@ public class FunCageActivity extends Activity implements DialogListener{
     }
 	
 	public void postOnWall(String msg) {
-        Log.d("Tests", "Testing graph API wall post");
          try {
                 String response = facebook.request("me");
                 Bundle parameters = new Bundle();
@@ -271,30 +278,6 @@ public class FunCageActivity extends Activity implements DialogListener{
          }
 
 
-	}
-
-	@Override
-	public void onComplete(Bundle values) {
-		// TODO Auto-generated method stub
-		postOnWall("R2D2");
-	}
-
-	@Override
-	public void onFacebookError(FacebookError e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void onError(DialogError e) {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void onCancel() {
-		// TODO Auto-generated method stub
-		
 	}
 	
 	/**
@@ -364,8 +347,17 @@ public class FunCageActivity extends Activity implements DialogListener{
 				
 				Log.i("OAuth","Token: "+consumer.getToken());
 				Log.i("OAuth","Secret Token: "+consumer.getTokenSecret());
-				// TODO: you might want to store token and token_secret in you app settings!!!!!!!!
-				AccessToken a = new AccessToken(consumer.getToken(), consumer.getTokenSecret());
+				
+				SavePreferences("twitterOAuthToken", consumer.getToken());
+				SavePreferences("twitterOAuthTokenSecret", consumer.getTokenSecret());
+				
+				postTweet();
+		}
+	}
+	
+	public void postTweet(){
+				LoadPreferences();
+				AccessToken a = new AccessToken(twitterOAuthToken, twitterOAuthTokenSecret);
 				
 				// initialize Twitter4J//
 				twitter = new TwitterFactory().getInstance();
@@ -373,8 +365,7 @@ public class FunCageActivity extends Activity implements DialogListener{
 				twitter.setOAuthAccessToken(a);
 				
 				// create a tweet
-				String tweet = "Check out this picture from FunCage";
-				Toast.makeText(this, "Posting!" + tweet, Toast.LENGTH_LONG).show();
+				String tweet = "Check out this fun photo from FunCage.com: http://www.funcage.com/m/funnypicture.php?image="+appImage;
 
 				// send the tweet//
 				try {
@@ -385,10 +376,20 @@ public class FunCageActivity extends Activity implements DialogListener{
 					Log.e(APP, e.getMessage());
 					e.printStackTrace();	
 				}
-				Toast.makeText(this, "Should have posted message...!" + tweet, Toast.LENGTH_LONG).show();
-				
-			
-
+				Toast.makeText(this, "Posted photo to twitter!", Toast.LENGTH_LONG).show();
 		}
-	}
+	
+	private void SavePreferences(String key, String value){
+	    SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
+	    SharedPreferences.Editor editor = sharedPreferences.edit();
+	    editor.putString(key, value);
+	    editor.commit();
+	   }
+	  
+	   private void LoadPreferences(){
+	    SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
+	    fblogin = sharedPreferences.getString("fblogin", "");
+	    twitterOAuthToken = sharedPreferences.getString("twitterOAuthToken", "");
+	    twitterOAuthTokenSecret = sharedPreferences.getString("twitterOAuthTokenSecret", "");
+	   }
 }
