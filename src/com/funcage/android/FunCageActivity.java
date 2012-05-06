@@ -128,8 +128,6 @@ public class FunCageActivity extends Activity{
 		//AlertView Builder
 		final AlertDialog.Builder builder;
 		builder = new AlertDialog.Builder(this);
-		builder.setTitle(" ");
-		builder.setIcon(R.drawable.banner);
 		builder.setMessage("Share this picture from FunCage.com using any of the below!");
 
 		builder.setPositiveButton("Email",
