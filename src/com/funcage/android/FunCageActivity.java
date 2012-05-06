@@ -1,8 +1,5 @@
 package com.funcage.android;
 
-import java.util.Date;
-
-import oauth.signpost.OAuth;
 import oauth.signpost.OAuthProvider;
 import oauth.signpost.basic.DefaultOAuthProvider;
 import oauth.signpost.commonshttp.CommonsHttpOAuthConsumer;
@@ -10,30 +7,17 @@ import oauth.signpost.exception.OAuthCommunicationException;
 import oauth.signpost.exception.OAuthExpectationFailedException;
 import oauth.signpost.exception.OAuthMessageSignerException;
 import oauth.signpost.exception.OAuthNotAuthorizedException;
-
-import android.content.SharedPreferences;
-import com.android.hardware.*;
-import twitter4j.Status;
 import twitter4j.Twitter;
 import twitter4j.TwitterException;
 import twitter4j.TwitterFactory;
 import twitter4j.auth.AccessToken;
-import android.webkit.*;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
-import android.hardware.Sensor;
-import android.hardware.SensorEvent;
-import android.hardware.SensorEventListener;
-import android.hardware.SensorManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.webkit.WebView;
@@ -43,12 +27,13 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.hardware.ShakeListener;
 import com.facebook.android.DialogError;
 import com.facebook.android.Facebook;
-import com.facebook.android.FacebookError;
 import com.facebook.android.Facebook.DialogListener;
-import com.facebook.android.PostDialogListener;
-import com.google.ads.*;
+import com.facebook.android.FacebookError;
+import com.google.ads.AdRequest;
+import com.google.ads.AdView;
 
 public class FunCageActivity extends Activity{
 	//Facebook//
@@ -71,10 +56,6 @@ public class FunCageActivity extends Activity{
 	String appImage;
 	FuncageJavaScriptInterface javaInterface = new FuncageJavaScriptInterface();
 	private ShakeListener mShaker;
-
-	private SharedPreferences prefs;
-	private final Handler mTwitterHandler = new Handler();
-	private TextView loginStatus;
 	
 	//Twitter
 	private static final String APP = 	"FunCage";//
@@ -104,6 +85,7 @@ public class FunCageActivity extends Activity{
 		randomPic.getSettings().setLoadWithOverviewMode(true);
 		randomPic.setScrollbarFadingEnabled(true);
 		randomPic.setScrollBarStyle(WebView.SCROLLBARS_INSIDE_OVERLAY);
+		randomPic.getSettings().setBuiltInZoomControls(true);
 
 		/* JavaScript must be enabled if you want it to work, obviously */  
 		randomPic.getSettings().setJavaScriptEnabled(true);  
