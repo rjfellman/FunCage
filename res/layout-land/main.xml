@@ -77,6 +77,6 @@
         android:text="Shake for random picture!"
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:gravity="center_horizontal"
-        android:textColor="#FFFFFF" />
+        android:textColor="#999999" />
 
 </RelativeLayout>
