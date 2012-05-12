@@ -6,59 +6,41 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-    <ImageView
-        android:id="@+id/funcagebanner"
-        android:layout_width="fill_parent"
-        android:layout_height="40dp"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginTop="2dp"
-        android:scaleType="fitXY"
-        android:src="@drawable/banner" />
-
     <WebView
         android:id="@+id/randomPicWebView"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_alignParentLeft="true"
-        android:layout_below="@+id/funcagebanner"
+        android:layout_alignParentTop="true"
         android:layout_marginRight="126dp"
         android:layout_marginTop="0dp"
         android:isScrollContainer="false" />
-
-    <com.google.ads.AdView
-        android:id="@+id/adView"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentLeft="true"
-        ads:adSize="BANNER"
-        ads:adUnitId="a14df6460244af5"
-        ads:loadAdOnCreate="true"
-        ads:testDevices="TEST_EMULATOR, TEST_DEVICE_ID" />
 
     <Button
         android:id="@+id/getRandomButton"
         android:layout_width="125dp"
         android:layout_height="50dp"
+        android:layout_marginRight="5dp"
         android:layout_alignParentRight="true"
         android:layout_below="@+id/shareButton"
-        android:text="Get Random Photo" />
+        android:text="Get Random Photo"
+        android:textColor="#666666" />
 
     <Button
         android:id="@+id/shareButton"
         android:layout_width="125dp"
         android:layout_height="50dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginRight="5dp"
         android:layout_alignParentRight="true"
         android:text="Share Random Photo"
-        android:layout_below="@+id/funcagebanner" />
+        android:textColor="#666666"  />
 
     <ProgressBar
         android:id="@+id/progressBar1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true" />
+        android:layout_centerInParent="true" />
 
     <TextView
         android:id="@+id/loadingText"
@@ -78,5 +60,15 @@
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:gravity="center_horizontal"
         android:textColor="#999999" />
+    
+    <com.google.ads.AdView android:id="@+id/adView"
+                         android:layout_width="0dp"
+                         android:layout_height="0dp"
+                         android:layout_alignParentBottom="true"
+        				 android:layout_alignParentLeft="true"
+                         ads:adUnitId="a14df6460244af5"
+                         ads:adSize="BANNER"
+                         ads:testDevices="TEST_EMULATOR, TEST_DEVICE_ID"
+                         ads:loadAdOnCreate="true"/>
 
 </RelativeLayout>
