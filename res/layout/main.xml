@@ -34,16 +34,6 @@
         android:layout_above="@+id/adView" >
 
     <Button
-        android:id="@+id/getRandomButton"
-        android:layout_width="fill_parent"
-        android:layout_weight="0.5"
-        android:layout_height="50dp"
-        android:layout_above="@+id/adView"
-        android:textColor="#666666"
-        android:layout_alignParentLeft="true"
-        android:text="Get Random Photo" />
-
-    <Button
         android:id="@+id/shareButton"
         android:layout_width="fill_parent"
         android:layout_height="50dp"
@@ -51,7 +41,18 @@
         android:layout_above="@+id/getRandomButton"
         android:textColor="#666666"
         android:layout_alignParentLeft="true"
-        android:text="Share Random Photo" />
+        android:text="Share" />
+    
+    <Button
+        android:id="@+id/getRandomButton"
+        android:layout_width="fill_parent"
+        android:layout_weight="0.5"
+        android:layout_height="50dp"
+        android:layout_above="@+id/adView"
+        android:textColor="#666666"
+        android:layout_alignParentLeft="true"
+        android:text="Random" />
+    
     </LinearLayout>
     
     <com.google.ads.AdView android:id="@+id/adView"
