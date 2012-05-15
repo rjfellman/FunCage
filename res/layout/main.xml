@@ -50,7 +50,7 @@
         android:layout_height="50dp"
         android:layout_above="@+id/adView"
         android:textColor="#666666"
-        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
         android:text="Random" />
     
     </LinearLayout>

@@ -87,14 +87,14 @@ public class FunCageActivity extends Activity{
 		randomPic.setScrollBarStyle(WebView.SCROLLBARS_INSIDE_OVERLAY);
 		randomPic.getSettings().setBuiltInZoomControls(true);
 
-		/* JavaScript must be enabled if you want it to work, obviously */  
+		/* JavaScript must be enabled if you want it to work, obviously */ //
 		randomPic.getSettings().setJavaScriptEnabled(true);  
 
 		randomPic.addJavascriptInterface(javaInterface, "HTMLOUT");
 
 
 		AdView adview = (AdView)findViewById(R.id.adView);
-		AdRequest re = new AdRequest();
+		AdRequest re = new AdRequest();//
 		adview.loadAd(re);
 
 
